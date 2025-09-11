@@ -60,7 +60,9 @@ Then add the dependency:
 ## API Summary
 
 ```java
-SimpleLog<T> logger = SimpleLog.of(T.class);
+SimpleLog logger = SimpleLog.of(T.class);
+
+logger.info("Test arguments: {} {}{}", 123, 123.456, "testing");
 
 logger.debug("debug msg");
 logger.info("info msg");
