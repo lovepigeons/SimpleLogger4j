@@ -15,21 +15,25 @@ public class SimpleLog<T> {
     private final Class<T> type;
 
     // ===== Constructors / factories =====
-    public static <T> SimpleLog<T> of(Class<T> clazz) throws IOException {
+    public static <T> SimpleLog<T> of(Class<T> clazz)  {
         return fromXml("simplelogger4j.xml", clazz);
     }
 
-    public static <T> SimpleLog<T> fromXml(String xmlPath, Class<T> clazz) throws IOException {
+    public static <T> SimpleLog<T> fromXml(String xmlPath, Class<T> clazz) {
         return fromXml(xmlPath, new StringFormatter(), clazz);
     }
 
-    public static <T> SimpleLog<T> fromXml(String xmlPath, Formatter formatter, Class<T> clazz) throws IOException {
+    public static <T> SimpleLog<T> fromXml(String xmlPath, Formatter formatter, Class<T> clazz) {
         LogConfig cfg = LogConfig.fromXml(xmlPath);
         return new SimpleLog<>(cfg, formatter, clazz);
     }
 
-    private SimpleLog(LogConfig cfg, Formatter formatter, Class<T> clazz) throws IOException {
-        LoggerBus.initIfNeeded(cfg);
+    private SimpleLog(LogConfig cfg, Formatter formatter, Class<T> clazz) {
+        try {
+            LoggerBus.initIfNeeded(cfg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.formatter = formatter;
         this.minLogLevel = cfg.getMinLevel();
         this.type = clazz;
