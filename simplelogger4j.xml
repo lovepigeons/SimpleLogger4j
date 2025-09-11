@@ -1,0 +1,17 @@
+<config>
+    <minLevel>DEBUG</minLevel>
+    <pattern>[%{timestamp:BRIGHT_BLACK}] [%{level:LEVEL}] (%{package:CYAN}) #%{sequence:BRIGHT_BLACK} %{message}</pattern>
+    <consoleColor>true</consoleColor>
+    <appenders>
+        <console enabled="true"/>
+        <file enabled="true" path="app.log" bufferSize="16384" append="true"/>
+    </appenders>
+    <levelPalette
+        debug="BLUE"
+        info=""
+        warn="BRIGHT_YELLOW"
+        success="GREEN"
+        error="RED"
+        critical="BG_BRIGHT_RED"
+    />
+</config>
