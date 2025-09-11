@@ -1,10 +1,10 @@
 <config>
-    <minLevel>DEBUG</minLevel>
-    <pattern>[%{timestamp:BRIGHT_BLACK}] [%{level:LEVEL}] (%{package:CYAN}) #%{sequence:BRIGHT_BLACK} %{message}</pattern>
-    <consoleColor>true</consoleColor>
+    <minLevel>INFO</minLevel>
+    <pattern>[%{timestamp:datetime('HH:mm:ss')|padRight(12)}] [%{level:LEVEL|padRight(8)}] (%{package:CYAN}) #%{sequence:BRIGHT_BLACK} %{message}</pattern>
+    <consoleColour>true</consoleColour>
     <appenders>
         <console enabled="true"/>
-        <file enabled="true" path="app.log" bufferSize="16384" append="true"/>
+        <file enabled="true" path="logs/app-%d{yyyy-MM-dd}.log" bufferSize="16384" append="true"/>
     </appenders>
     <levelPalette
         debug="BLUE"

@@ -4,7 +4,13 @@ import java.util.Locale;
 import java.util.Objects;
 
 public enum LogLevel {
-    DEBUG(0), INFO(1), WARN(2), ERROR(3), SUCCESS(4), CRITICAL(5);
+    TRACE(0),
+    DEBUG(1),
+    INFO(2),
+    SUCCESS(3),
+    WARN(4),
+    ERROR(5),
+    CRITICAL(6);
 
     private final int priority;
 

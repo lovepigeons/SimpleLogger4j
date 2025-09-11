@@ -11,6 +11,15 @@ public class FileAppender implements Appender {
 
     public FileAppender(LogConfig config) throws FileNotFoundException {
         this.config = config;
+
+        File logFile = new File(this.config.getFilePath());
+        File parentDir = logFile.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                throw new FileNotFoundException("Could not create log directory: " + parentDir);
+            }
+        }
+
         FileOutputStream fos = new FileOutputStream(this.config.getFilePath(), this.config.isFileAppend());
         OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
         BufferedWriter bw = new BufferedWriter(osw, Math.max(1024, this.config.getFileBufferSize()));

@@ -1,6 +1,8 @@
 package org.oldskooler.simplelogger4j;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
@@ -17,7 +19,7 @@ public class LogConfig {
     private int flushEvery = 10;
     private boolean consoleEnabled = true;
     private boolean fileEnabled = true;
-    private String filePath = "application.log";
+    private String filePath = "logs/app-%d{yyyy-MM-dd}.log";
     private int fileBufferSize = 8192;
     private boolean fileAppend = true;
     /** Enable ANSI on console (auto-stripped for file). */
@@ -149,6 +151,15 @@ public class LogConfig {
     }
 
     public String getFilePath() {
+        if (filePath.contains("%d{")) {
+            int start = filePath.indexOf("%d{");
+            int end = filePath.indexOf("}", start);
+            if (end > start) {
+                String pattern = filePath.substring(start + 3, end);
+                String formatted = new SimpleDateFormat(pattern).format(new Date());
+                return filePath.substring(0, start) + formatted + filePath.substring(end + 1);
+            }
+        }
         return filePath;
     }
 

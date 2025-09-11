@@ -4,7 +4,9 @@ import org.oldskooler.simplelogger4j.SimpleLog;
 
 public class Basic {
     public static void main(String[] args) throws Exception {
-        SimpleLog<Basic> logger = SimpleLog.of(Basic.class);
+        SimpleLog logger = SimpleLog.of(Basic.class);
+
+        logger.info("Test arguments: {} {}{}", 123, 123.456, "testing");
 
         logger.info("This is logged at info level");
         logger.warn("This is logged at warn level");
