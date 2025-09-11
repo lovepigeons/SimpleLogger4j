@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'org.oldskooler'
+// version = '1.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+    toolchain { languageVersion = JavaLanguageVersion.of(8) }
+}
+
+dependencies {
+
+}
