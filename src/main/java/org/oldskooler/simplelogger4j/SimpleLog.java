@@ -6,29 +6,29 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class SimpleLog<T> {
+public class SimpleLog {
     private final Formatter formatter;
     private final LogLevel minLogLevel;
     private final AtomicBoolean disposed = new AtomicBoolean(false);
     private final AtomicLong droppedMessages = new AtomicLong(0);
     private final AtomicLong totalMessages = new AtomicLong(0);
-    private final Class<T> type;
+    private final Class<?> type;
 
     // ===== Constructors / factories =====
-    public static <T> SimpleLog<T> of(Class<T> clazz)  {
+    public static <T> SimpleLog of(Class<T> clazz)  {
         return fromXml("simplelogger4j.xml", clazz);
     }
 
-    public static <T> SimpleLog<T> fromXml(String xmlPath, Class<T> clazz) {
+    public static <T> SimpleLog fromXml(String xmlPath, Class<T> clazz) {
         return fromXml(xmlPath, new StringFormatter(), clazz);
     }
 
-    public static <T> SimpleLog<T> fromXml(String xmlPath, Formatter formatter, Class<T> clazz) {
+    public static <T> SimpleLog fromXml(String xmlPath, Formatter formatter, Class<T> clazz) {
         LogConfig cfg = LogConfig.fromXml(xmlPath);
-        return new SimpleLog<>(cfg, formatter, clazz);
+        return new SimpleLog(cfg, formatter, clazz);
     }
 
-    private SimpleLog(LogConfig cfg, Formatter formatter, Class<T> clazz) {
+    private SimpleLog(LogConfig cfg, Formatter formatter, Class<?> clazz) {
         try {
             LoggerBus.initIfNeeded(cfg);
         } catch (IOException e) {
@@ -66,6 +66,65 @@ public class SimpleLog<T> {
     public void error(String msg, Throwable t) { log(LogLevel.ERROR, msg, t); }
     public void critical(String msg) { log(LogLevel.CRITICAL, msg); }
     public void critical(String msg, Throwable t) { log(LogLevel.CRITICAL, msg, t); }
+
+    public void debug(String msg, Object... args) {
+        log(LogLevel.DEBUG, format(msg, args));
+    }
+
+    public void info(String msg, Object... args) {
+        log(LogLevel.INFO, format(msg, args));
+    }
+
+    public void warn(String msg, Object... args) {
+        log(LogLevel.WARN, format(msg, args));
+    }
+
+    public void success(String msg, Object... args) {
+        log(LogLevel.SUCCESS, format(msg, args));
+    }
+
+    public void warn(String msg, Throwable t, Object... args) {
+        log(LogLevel.WARN, format(msg, args), t);
+    }
+
+    public void error(String msg, Object... args) {
+        log(LogLevel.ERROR, format(msg, args));
+    }
+
+    public void error(String msg, Throwable t, Object... args) {
+        log(LogLevel.ERROR, format(msg, args), t);
+    }
+
+    public void critical(String msg, Object... args) {
+        log(LogLevel.CRITICAL, format(msg, args));
+    }
+
+    public void critical(String msg, Throwable t, Object... args) {
+        log(LogLevel.CRITICAL, format(msg, args), t);
+    }
+
+    /**
+     * Simple formatter that replaces {} with arguments in order.
+     */
+    private String format(String template, Object... args) {
+        if (template == null || args == null || args.length == 0) {
+            return template;
+        }
+        StringBuilder sb = new StringBuilder();
+        int argIndex = 0;
+        int cur = 0;
+        int brace;
+        while ((brace = template.indexOf("{}", cur)) != -1 && argIndex < args.length) {
+            sb.append(template, cur, brace);
+
+            Object argument = args[argIndex++];
+            sb.append(argument == null ? "null" : argument.toString());
+
+            cur = brace + 2;
+        }
+        sb.append(template.substring(cur));
+        return sb.toString();
+    }
 
     /** enqueue a flush sentinel (blocks briefly if queue is full) */
     public void flush() {
