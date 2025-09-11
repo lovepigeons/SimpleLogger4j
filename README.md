@@ -28,7 +28,7 @@ Then add the dependency:
 
 ```groovy
 dependencies {
-    implementation 'com.github.lovepigeons:SimpleLogger4j:v1.0.0'
+    implementation 'com.github.lovepigeons:SimpleLogger4j:v1.0.3'
 }
 ```
 
@@ -52,7 +52,7 @@ Then add the dependency:
     <dependency>
         <groupId>com.github.lovepigeons</groupId>
         <artifactId>SimpleLogger4j</artifactId>
-        <version>v1.0.0</version>
+        <version>v1.0.3</version>
     </dependency>
 </dependencies>
 ```
@@ -62,7 +62,7 @@ Then add the dependency:
 ```java
 SimpleLog logger = SimpleLog.of(T.class);
 
-logger.info("Test arguments: {} {}{}", 123, 123.456, "testing");
+logger.info("Test arguments: {} {} {}", 123, 123.456, "testing");
 
 logger.debug("debug msg");
 logger.info("info msg");
@@ -83,10 +83,10 @@ logger.critical("critical with stack", throwable);
 
 ```java
 // Uses default config (simplelogger4j.xml if exists, else internal defaults)
-SimpleLog<MyClass> logger = SimpleLog.of(MyClass.class);
+SimpleLog logger = SimpleLog.of(MyClass.class);
 
 // Or specify a custom XML config file
-SimpleLog<MyClass> logger = SimpleLog.of(MyClass.class, "mylog.xml");
+SimpleLog logger = SimpleLog.of(MyClass.class, "mylog.xml");
 ```
 
 ### XML Configuration
