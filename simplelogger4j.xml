@@ -1,6 +1,6 @@
 <config>
     <minLevel>INFO</minLevel>
-    <pattern>[%{timestamp:datetime('HH:mm:ss')|padRight(12)}] [%{level:LEVEL|padRight(8)}] (%{package:CYAN}) #%{sequence:BRIGHT_BLACK} %{message}</pattern>
+    <pattern>[%{timestamp:datetime('HH:mm:ss')|padRight(12)}] [%{level:LEVEL|padRight(8)}] (%{name:CYAN}) #%{sequence:BRIGHT_BLACK} %{message}</pattern>
     <consoleColour>true</consoleColour>
     <appenders>
         <console enabled="true"/>
