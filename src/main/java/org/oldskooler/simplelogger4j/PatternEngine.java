@@ -56,11 +56,8 @@ public class PatternEngine {
                         case "message":
                             value = j.message;
                             break;
-                        case "class":
-                            value = j.className;
-                            break;
-                        case "package":
-                            value = j.packageName;
+                        case "name":
+                            value = j.name;
                             break;
                         default:
                             value = "%{" + inside + "}"; // passthrough

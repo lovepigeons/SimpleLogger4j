@@ -12,23 +12,27 @@ public class SimpleLog {
     private final AtomicBoolean disposed = new AtomicBoolean(false);
     private final AtomicLong droppedMessages = new AtomicLong(0);
     private final AtomicLong totalMessages = new AtomicLong(0);
-    private final Class<?> type;
+    private final String name;
 
     // ===== Constructors / factories =====
-    public static <T> SimpleLog of(Class<T> clazz)  {
-        return fromXml("simplelogger4j.xml", clazz);
+    public static <T> SimpleLog of(Class<T> clazz) {
+        return fromXml("simplelogger4j.xml", clazz.getCanonicalName());
     }
 
-    public static <T> SimpleLog fromXml(String xmlPath, Class<T> clazz) {
-        return fromXml(xmlPath, new StringFormatter(), clazz);
+    public static <T> SimpleLog of(String name)  {
+        return fromXml("simplelogger4j.xml", name);
     }
 
-    public static <T> SimpleLog fromXml(String xmlPath, Formatter formatter, Class<T> clazz) {
+    public static <T> SimpleLog fromXml(String xmlPath, String name) {
+        return fromXml(xmlPath, new StringFormatter(), name);
+    }
+
+    public static <T> SimpleLog fromXml(String xmlPath, Formatter formatter, String name) {
         LogConfig cfg = LogConfig.fromXml(xmlPath);
-        return new SimpleLog(cfg, formatter, clazz);
+        return new SimpleLog(cfg, formatter, name);
     }
 
-    private SimpleLog(LogConfig cfg, Formatter formatter, Class<?> clazz) {
+    private SimpleLog(LogConfig cfg, Formatter formatter, String name) {
         try {
             LoggerBus.initIfNeeded(cfg);
         } catch (IOException e) {
@@ -36,7 +40,7 @@ public class SimpleLog {
         }
         this.formatter = formatter;
         this.minLogLevel = cfg.getMinLevel();
-        this.type = clazz;
+        this.name = name;
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
@@ -47,12 +51,10 @@ public class SimpleLog {
     public void log(LogLevel level, String message, Throwable throwable) {
         if(disposed.get() || level.getPriority() < minLogLevel.getPriority()) return;
         totalMessages.incrementAndGet();
+
         String msg = formatter.formatMessage(message);
 
-        String className = this.type.getSimpleName();
-        String packageName = this.type.getCanonicalName();
-
-        boolean result = LoggerBus.offer(PrintJob.of(className, packageName, level, msg, throwable), droppedMessages);
+        boolean result = LoggerBus.offer(PrintJob.of(name, level, msg, throwable), droppedMessages);
 
     }
 
